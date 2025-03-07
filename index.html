@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Mail-Tracking</title>
+</head>
+<body>
+    <h2>Danke für deine Rückmeldung!</h2>
+    <p>Deine Antwort wurde erfasst und gesendet.</p>
+
+    <form id="trackingForm" method="POST">
+        <input type="hidden" name="question" id="questionInput">
+        <input type="hidden" name="answer" id="answerInput">
+        <input type="hidden" name="_subject" id="subjectInput">
+    </form>
+
+    <script>
+        function getQueryParams() {
+            const params = new URLSearchParams(window.location.search);
+            return {
+                question: params.get('question'),
+                answer: params.get('answer'),
+                email: params.get('email')
+            };
+        }
+
+        function sendForm(question, answer, email) {
+            if (!email) {
+                console.error("Keine E-Mail-Adresse angegeben!");
+                return;
+            }
+            
+            const form = document.getElementById("trackingForm");
+            form.action = `https://formsubmit.co/${email}`;
+            
+            document.getElementById("questionInput").value = question;
+            document.getElementById("answerInput").value = answer;
+            document.getElementById("subjectInput").value = `${question} -> ${answer}`;
+            form.submit();
+        }
+
+        const { question, answer, email } = getQueryParams();
+        if (question && answer && email) {
+            sendForm(question, answer, email);
+        }
+    </script>
+</body>
+</html>
